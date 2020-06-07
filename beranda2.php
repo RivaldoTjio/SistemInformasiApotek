@@ -1,3 +1,22 @@
+<?php
+if (!isset($_SESSION)){
+    session_start();
+}
+include_once 'User.php';
+$user1 = new User();
+
+if ($_SERVER["REQUEST_METHOD"] == "POST")
+{
+  $username = $_POST['username'];
+  $password = md5($_POST['password']);
+  if ($user1->login($username,$password)) {
+    header("location:admin.php");
+  }else {
+   
+  }
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,6 +43,7 @@
         <div>
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
+              
               <a class="nav-link" href="#onphpidLogin" data-toggle="modal" ><svg class="bi bi-person-fill " width="2em" height="3em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
               </svg></a>
@@ -34,6 +54,7 @@
   </nav>
        </header>
        <main style="margin-top: 50px;">
+
       <div>
         <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
           <ol class="carousel-indicators">
@@ -68,6 +89,7 @@
       </div>
       <div id="content" >
         <hr>
+        <h1></h1>
         <div class="tntg" style="background-color: #0fb400; padding-bottom: 20px; padding-top: 10px;">
         <article id="Home" class="container" > 
            <h2 style="color: white;">Tentang</h2>  
@@ -80,6 +102,7 @@
            Tidak perlu antri menebus resep di Rumah Sakit, Klinik, atau Apotek, sekarang Anda bisa langsung upload resep dokter di Web ini
            Caranya mudah, dengan foto langsung resep obat menggunakan smartphone dan upload pada menu kirim resep yang tersedia tungu beberapa 
            menit lalu anda bisa mengambil obat.</p>
+          
        </article>
       </div>
        <hr>
@@ -135,14 +158,14 @@
             <!-- Gae login -->
             <div class="modal-body">
               <!-- form login -->
-              <form action="check-login.php" method="post">
+              <form method="POST" action="">
                 <div class="form-group">
                   <label for="username">Username</label>
                   <input type="text" name="username" placeholder="Username" class="form-control" />
                 </div>
                 <div class="form-group">
                   <label for="password">Password</label>
-                  <input type="text" name="password" placeholder="Password" class="form-control" />
+                  <input type="password" name="password" placeholder="Password" class="form-control" />
                 </div>
                 <div class="text-right">
                   <button class="btn btn-danger" type="submit">Login</button>
@@ -181,6 +204,8 @@
                   } );
               }
           } );
-      } );</script>
+      } );
+     
+      </script>
     </body>
 </html>

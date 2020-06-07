@@ -1,3 +1,15 @@
+<?php
+include_once 'User.php';
+if (!isset($_SESSION)){
+  session_start();
+}
+$user1 = new User();
+if (isset($_GET['logoutt'])) {
+ $user1->logout();
+ header("location:beranda2.php");
+}
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -13,18 +25,21 @@
       <header>
         <nav class="navbar navbar-dark" style="background-color: #0fb400;">
             <a class="navbar-brand" href="#">Logo</a>
+            <i class="far fa-h1    "><?php echo"Hai ".$_SESSION['username'].""; ?></i>
           </nav>
       </header>
       <main>
     <div class="row container" style="margin-top: 50px;">
         <div class="col-4" >
+          
           <div class="list-group" id="list-tab" role="tablist">
             <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="Input">Input data</a>
             <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="Edit">Edit data</a>
             <a class="list-group-item list-group-item-action" id="list-kasir-list"  href="kasir.html">Kasir</a>
             <a class="list-group-item list-group-item-action" id="list-lapor-list" data-toggle="list" href="#list-lapor" role="tab" aria-controls="Edit">Laporan penjualan</a>
-            <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="modal" href="#modalkeluar" role="tab" aria-controls="Keluar">Keluar</a>
+            <a class="list-group-item list-group-item-action" id="list-messages-list" value="logoutt" data-toggle="modal" href="admin.php?logoutt=true" role="tab" aria-controls="Keluar">Keluar</a>
           </div>
+          
         </div>
         <div class="col-8">
           <div class="tab-content" id="nav-tabContent" >
@@ -145,7 +160,8 @@
       </div>
     </main>
     
-    <div class="modal fade" id="modalkeluar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <form method="POST">    
+<div id="modalkeluar" class="modal fade" tabindex="-1" role="dialog" >
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -153,17 +169,18 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-      </div>
+        </div>
       <div class="modal-body">
         Apakah Anda yakin untuk keluar 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
-        <a href="beranda2.html"><button type="button" class="btn btn-success">Iya</button></a>
+        <button type="button" name="batal" class="btn btn-danger" data-dismiss="modal">Batal</button>
+        <button type="button" name="logout" class="btn btn-success">Ya</button>
       </div>
     </div>
   </div>
 </div>
+</form>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
