@@ -8,6 +8,20 @@ if (isset($_GET['logoutt'])) {
  $user1->logout();
  header("location:beranda2.php");
 }
+if (isset($_GET['input'])) {
+  alert("Input Sukses");
+} elseif (isset($_GET['input'])=='gagal') {
+  alert("Input Gagal");
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST")
+{
+
+}
+
+function alert($msg) {
+  echo "<script type='text/javascript'>alert('$msg');</script>";
+}
 ?>
 
 <!doctype html>
@@ -16,9 +30,7 @@ if (isset($_GET['logoutt'])) {
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
     <title>Halaman Admin</title>
-    
     <style>
-        
     </style>
   </head>
   <body>
@@ -44,12 +56,9 @@ if (isset($_GET['logoutt'])) {
         <div class="col-8">
           <div class="tab-content" id="nav-tabContent" >
             <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
-                <form action="check-login.php" method="post">
+                <form action="inputdata.php" method="post">
                     <div class="form-group" >
                         <h2>Input Data obat </h2>
-                        <hr>
-                      <label for="prdk">Kode Obat</label>
-                      <input type="text" name="kode" class="form-control" />
                     </div>
                     <div class="form-group">
                       <label for="namaobat" style="text-align: center;">Nama Obat</label>
@@ -64,14 +73,13 @@ if (isset($_GET['logoutt'])) {
                         <input type="text" name="ttlstck"  class="form-control" />
                       </div>
                       <div class="form-group">
-                        <label for="harga" style="text-align: center;">Harga</label>
-                        <input type="text" name="harga"  class="form-control"  />
+                        <label for="hargabeli" style="text-align: center;">Harga Beli</label>
+                        <input type="number" name="hargabeli"  class="form-control"  />
                       </div>
                       <div class="form-group">
-                        <label for="input gambar">Input Gambar</label>
-                        <input type="file" class="form-control-file" id="inputgambar">
+                        <label for="hargajual" style="text-align: center;">Harga Jual</label>
+                        <input type="number" name="hargajual"  class="form-control"  />
                       </div>
-
                     <div class="text-center" style="padding-bottom: 10px;">
                       <button class="btn btn-success btn-block" type="submit">Input</button>
                     </div>
