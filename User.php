@@ -6,24 +6,7 @@ if (!isset($_SESSION)){
 
 class User 
 {
-    private $error;
-    
-
-    function __construct(){
-        
-        
-    }
-    public function register($username, $password, $type)
-    {
-        try {
-            $password = md5($password);
-            $sql = mysqli_query($conn,"insert into users values ('$username','$password','$type') ");
-            return true;
-        } catch (\Throwable $th) {
-            $error = $th;
-        }  
-    }
-
+   
     public function login($username,$password)
     {   
         $conn;
