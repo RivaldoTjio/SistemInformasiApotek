@@ -1,3 +1,7 @@
+<?php
+ 
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -67,38 +71,22 @@
                 <form>
                     <h3>Barang</h3><br>
                     <div class="form-group">
-                      <label for="formGroupExampleInput">Kode Barang</label>
-                      <select class="form-control" id="kdbarang">
-                        <option>-</option>
-                      <option>0</option>
-                      <option>1</option>
-                      <option>2</option>
+                      <label for="formGroupExampleInput">Nama Obat</label>
+                      <select class="form-control" id="namaobat">
+                      <option>-</option>
+                        <?php
+                        include "koneksi.php";
+                        $query = "SELECT `KODEOBAT`,`NAMAOBAT` FROM `obat` WHERE 1";
+                        $result = mysqli_query($conn,$query); 
+                        
+                        while ($data = mysqli_fetch_array($result)){
+                          echo "<option value='$data[0]'>$data[1]</option>";
+                        }
+                        ?>
                     </select>
                     </div>
-                    <div class="form-group">
-                      <label for="formGroupExampleInput2">Nama Barang</label>
-                      <select class="form-control" id="pilihbarang">
-                        <option>-</option>
-                      <option>Tunai</option>
-                      <option>Debit</option>
-                      <option>Kredit</option>
-                    </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="formGroupExampleInput">Kategori</label>
-                        <select class="form-control" id="pilihJurusan">
-                            <option>-</option>
-                          <option>Tunai</option>
-                          <option>Debit</option>
-                          <option>Kredit</option>
-                        </select>
-                      </div>
-                      <div class="form-group">
-                        <label for="formGroupExampleInput">Harga</label>
-                        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Harga">
-                      </div>
                       <div class="text-right">
-                      <button class="btn btn-success" type="submit">Check</button>
+                      <button class="btn btn-success" onclick="addRow" type="submit">Masukan Ke Keranjang</button>
                       </div>
                     </form>
             </div>
@@ -112,11 +100,11 @@
             <table id="example" class="display" style="width:100%">
                 <thead>
                     <tr>
-                        <th>Column 1</th>
-                        <th>Column 2</th>
-                        <th>Column 3</th>
-                        <th>Column 4</th>
-                        <th>Column 5</th>
+                        <th>Kode Barang</th>
+                        <th>Nama Barang</th>
+                        <th>Kuantitas</th>
+                        <th>Harga Satuan</th>
+                        
                     </tr>
                 </thead>
                 
@@ -172,27 +160,58 @@
       <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
       <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
       <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
       <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
        <script type="text/javascript">
        $(document).ready(function() {
     var t = $('#example').DataTable();
+    t
+    .column(0)
+    .data()
+    .unique();
     var counter = 1;
+    $("select.form-control").change(function(){
+      var selected = $("namaobat").val();
+      $.ajax({
+        url: "getdata.php?kode="+selected,
+        dataType: "JSON",
+        success: function(json){
+          var obj = JSON.parse(json);
+            t.row.add( [
+              obj.kodeobat,
+              obj.namaobat,
+              '1',
+              obj.hargabeli
+            ]
+            )
+          
+        }
+      });
+    });
  
     $('#addRow').on( 'click', function () {
-        t.row.add( [
-            counter +'.1',
-            counter +'.2',
-            counter +'.3',
-            counter +'.4',
-            counter +'.5'
-        ] ).draw( false );
- 
-        counter++;
+      var selected = $("namaobat").val();
+      $.ajax({
+        url: "getdata.php?kode="+selected,
+        dataType: "JSON",
+        success: function(json){
+          var obj = JSON.parse(json);
+            t.row.add( [
+              obj.kodeobat,
+              obj.namaobat,
+              '1',
+              obj.hargabeli
+            ]
+            )
+        }
+      });
     } );
  
     // Automatically add a first row of data
     $('#addRow').click();
+
+    
 } );
       </script>
     </body>

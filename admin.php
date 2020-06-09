@@ -9,19 +9,55 @@ if (isset($_GET['logoutt'])) {
  header("location:beranda2.php");
 }
 if (isset($_GET['input'])) {
-  alert("Input Sukses");
-} elseif (isset($_GET['input'])=='gagal') {
+  if ($_GET['input']=='sukses') {
+    alert("Input Sukses");
+    unset($_GET['input']);  
+  } elseif (isset($_GET['input'])=='gagal') {
   alert("Input Gagal");
+  unset($_GET['input']);
+}
+}
+if (isset($_GET['update'])) {
+  if ($_GET['update']=='sukses') {
+    alert("Update Sukses");
+  unset($_GET['update']);
+  } elseif (isset($_GET['update'])=='gagal') {
+  alert("Update Gagal");
+  unset($_GET['update']);
+} else{
+  alert($_GET['update']);
+}
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST")
-{
+if (isset($_GET['delete'])) {
+  if ($_GET['delete']=='sukses') {
+    alert("Hapus Sukses");
+  unset($_GET['delete']);
+  } elseif (isset($_GET['delete'])=='gagal') {
+  alert("Hapus Gagal");
+  unset($_GET['delete']);
+} else{
+  alert($_GET['delete']);
+}
 
 }
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($_POST['logout']== "Ya") {
+      $user1->logout();
+      header("location:beranda2.php");
+    }
+}
+
+function logoutuser() {
+  $this->user1->logout();
+  header("location:beranda2.php");
+}
+
 
 function alert($msg) {
   echo "<script type='text/javascript'>alert('$msg');</script>";
 }
+
 ?>
 
 <!doctype html>
@@ -36,7 +72,7 @@ function alert($msg) {
   <body>
       <header>
         <nav class="navbar navbar-dark" style="background-color: #0fb400;">
-            <a class="navbar-brand" href="#">Logo</a>
+            <a class="navbar-brand" href="#">Sistem Informasi Apotek</a>
             <i class="far fa-h1    "><?php echo"Hai ".$_SESSION['username'].""; ?></i>
           </nav>
       </header>
@@ -46,13 +82,12 @@ function alert($msg) {
           
           <div class="list-group" id="list-tab" role="tablist">
             <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="Input">Input data</a>
-            <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="Edit">Edit data</a>
-            <a class="list-group-item list-group-item-action" id="list-kasir-list"  href="kasir.html">Kasir</a>
-            <a class="list-group-item list-group-item-action" id="list-lapor-list" data-toggle="list" href="#list-lapor" role="tab" aria-controls="Edit">Laporan penjualan</a>
-            <a class="list-group-item list-group-item-action" id="list-messages-list" value="logoutt" data-toggle="modal" href="admin.php?logoutt=true" role="tab" aria-controls="Keluar">Keluar</a>
+            <a class="list-group-item list-group-item-action" id="list-lapor-list" data-toggle="list" href="#list-edit" role="tab" aria-controls="Input">Edit Data</a>
+            <a class="list-group-item list-group-item-action" id="list-delete-list" data-toggle="list" href="#list-delete" role="tab" aria-controls="Input">Delete Data</a>
+            <a class="list-group-item list-group-item-action" id="list-messages-list" value="logoutt" data-toggle="modal" href="#modalkeluar" role="tab" aria-controls="Keluar">Keluar</a>
           </div>
-          
-        </div>
+          </div>
+        
         <div class="col-8">
           <div class="tab-content" id="nav-tabContent" >
             <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
@@ -66,7 +101,7 @@ function alert($msg) {
                     </div>
                     <div class="form-group">
                         <label for="Deskripsi" style="text-align: center;">Deskripsi</label>
-                        <textarea id="deskkripsi" class="form-control" rows="3"></textarea>
+                        <textarea id="deskkripsi" name="deskrip" class="form-control" rows="3"></textarea>
                       </div>
                       <div class="form-group">
                         <label for="total" style="text-align: center;">Total Stock</label>
@@ -86,90 +121,118 @@ function alert($msg) {
                     
                   </form>
             </div>
-            <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
-            <table class="table table-hover table-responsive" >
-            <thead style="background-color: #4da6ff;">
-            <tr>
-        <th>Gambar</th>
-        <th>Kode Obat</th>
-        <th>Nama Obat </th>
-        <th>Deskripsi</th>
-        <th>Stock</th>
-        <th>Harga</th>
-        <th>#</th>
-        
-          </tr>
-        </thead>
-    <?php 
-    $sql = "SELECT * FROM validation";
-    $qry=mysqli_query($conn, $sql) or die("Gagal");
-    while($d = mysqli_fetch_array($qry)){
-    ?> <!-- Ini Contoh -->
-    <tbody>
-    <tr>
-        <td><?php echo $d['nama']; ?></td>
-        <td><?php echo $d['nama']; ?></td>
-        <td><?php echo $d['jkel']; ?></td>
-        <td><?php echo $d['nisn']; ?></td>
-        <td><?php echo $d['nik']; ?></td>
-        <td><?php echo $d['temlahir']; ?></td>
-        <td><a href="#">Edit</a></td>
-    </tr>
-    </tbody>
-    <?php
-    } 
-     ?>
-        </table>
-            </div>
-            <div class="tab-pane fade" id="list-lapor" role="tabpanel" aria-labelledby="list-lapor-list">
-            <div>
-            <table id="example" class="row-border hover order-column" style="width:100%">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Office</th>
-                <th>Age</th>
-                <th>Start date</th>
-                <th>Salary</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Tiger Nixon</td>
-                <td>System Architect</td>
-                <td>Edinburgh</td>
-                <td>61</td>
-                <td>2011/04/25</td>
-                <td>$320,800</td>
-            </tr>
-            <tr>
-                <td>Garrett Winters</td>
-                <td>Accountant</td>
-                <td>Tokyo</td>
-                <td>63</td>
-                <td>2011/07/25</td>
-                <td>$170,750</td>
-            </tr>
-            <tr>
-                <td>Ashton Cox</td>
-                <td>Junior Technical Author</td>
-                <td>San Francisco</td>
-                <td>66</td>
-                <td>2009/01/12</td>
-                <td>$86,000</td>
-            </tr>
-           </tbody>
-          </table>
-          </div>
-            </div>
-          </div>
+            
+          <div class="tab-pane fade" id="list-edit" role="tabpanel" aria-labelledby="list-edit-list">
+                <form action="updatedata.php" method="post">
+                    <div class="form-group" >
+                        <h2>Edit Data obat </h2>
+                    </div>
+                    <div class="form-group">
+                      <label for="kodeobat" style="text-align: center;">Kode Obat</label>
+                      <select class="form-control" id="kodeobat" name="kodeobat">
+                      <option>-</option>
+                        <?php
+                        include "koneksi.php";
+                        $query = "SELECT `KODEOBAT` FROM `obat` WHERE 1";
+                        $result = mysqli_query($conn,$query); 
+                        while ($data = mysqli_fetch_array($result)){
+                          echo "<option value='$data[0]'>$data[0]</option>";
+                        }
+                        mysqli_close($conn);
+                        ?>
+                    </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="namaobat" style="text-align: center;">Nama Obat</label>
+                        <input type="text" name="namaobat" class="form-control" />
+                      </div>
+                    <div class="form-group">
+                        <label for="Deskripsi" style="text-align: center;">Deskripsi</label>
+                        <textarea id="deskripsi" name="dekskrip" class="form-control" rows="3"></textarea>
+                      </div>
+                      <div class="form-group">
+                        <label for="total" style="text-align: center;">Total Stock</label>
+                        <input type="text" name="ttlstck"  class="form-control" />
+                      </div>
+                      <div class="form-group">
+                        <label for="hargabeli" style="text-align: center;">Harga Beli</label>
+                        <input type="number" name="hargabeli"  class="form-control"  />
+                      </div>
+                      <div class="form-group">
+                        <label for="hargajual" style="text-align: center;">Harga Jual</label>
+                        <input type="number" name="hargajual"  class="form-control"  />
+                      </div>
+                    <div class="text-center" style="padding-bottom: 10px;">
+                      <button class="btn btn-success btn-block" type="submit">Edit</button>
+                    </div>
+                    
+                  </form>
+              </div>
+            
+            <div class="tab-pane fade" id="list-delete" role="tabpanel" aria-labelledby="list-delete-list">
+                <form method="post" action="delete.php">
+                <div class="form-group" >
+                        <h2>Hapus Data obat </h2>
+                    </div> 
+                    <div class="form-group">
+                      <label for="kodeobat" style="text-align: center;">Kode Obat</label>
+                      <select class="form-control" id="kodeobat" name="kodeobat">
+                      <option>-</option>
+                        <?php
+                        include "koneksi.php";
+                        $query = "SELECT `KODEOBAT` FROM `obat` WHERE 1";
+                        $result = mysqli_query($conn,$query); 
+                        while ($data = mysqli_fetch_array($result)){
+                          echo "<option value='$data[0]'>$data[0]</option>";
+                        }
+                        mysqli_close($conn);
+                        ?>
+                    </select>
+                    </div>
+                    <div class="form-group">
+                    <div class="text-center" style="padding-bottom: 10px;">
+                      <button class="btn btn-danger btn-block" type="submit">Delete</button>
+                    </div>
+                    </div>
+                </form>
+                
+          <table id="example" class="display" style="width:100%">
+            <thead style="background-color: black;color: white;">
+                <tr>
+                    <th>Kode Obat</th>
+                    <th>Nama Obat</th> 
+                    <th>Deskripsi</th>
+                    <th>Stok</th>
+                    <th>Harga</th>
+                </tr>
+            </thead>
+            <tbody>
+              <?php
+                include "koneksi.php";
+                $query = "select kodeobat, namaobat,deskripsi,stok,hargajual from obat";
+                $result = mysqli_query($conn,$query);
+                while($data = mysqli_fetch_array($result)){
+                echo "<tr>
+                    <td>$data[0]</td>
+                    <td>$data[1]</td>
+                    <td>$data[2]</td>
+                    <td>$data[3]</td>
+                    <td>$data[4]</td>
+                </tr>";
+              }
+                ?>
+            </tbody>
+           
+        </table> 
+      </div>
+      </div>
         </div>
       </div>
     </main>
     
-    <form method="POST">    
+      
 <div id="modalkeluar" class="modal fade" tabindex="-1" role="dialog" >
+<form method="POST">  
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -183,12 +246,13 @@ function alert($msg) {
       </div>
       <div class="modal-footer">
         <button type="button" name="batal" class="btn btn-danger" data-dismiss="modal">Batal</button>
-        <button type="button" name="logout" class="btn btn-success">Ya</button>
+        <input type="submit" name="logout" onclick="logoutuser()" class="btn btn-success" value="Ya"></i>
       </div>
     </div>
   </div>
+  </form>
 </div>
-</form>
+
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>

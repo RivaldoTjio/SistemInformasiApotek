@@ -12,8 +12,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
   if ($user1->login($username,$password)) {
     header("location:admin.php");
   }else {
-   
+   alert("Username atau Password Salah");
   }
+}
+
+function alert($msg) {
+  echo "<script type='text/javascript'>alert('$msg');</script>";
 }
 ?>
 
@@ -39,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
   <header>
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #0fb400;">
       <div class="container">
-        <a class="navbar-brand" href="#">Logo</a>
+        <a class="navbar-brand" href="#">Sistem Informasi Apotek</a>
         <div>
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
@@ -111,31 +115,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
           <table id="example" class="display" style="width:100%">
             <thead style="background-color: black;color: white;">
                 <tr>
-                    <th>Name</th>
-                    <th>Position</th> 
-                    <th>Office</th>
-                    <th>Age</th>
-                    <th>Start date</th>
-                    <th>Salary</th>
+                    <th>Kode Obat</th>
+                    <th>Nama Obat</th> 
+                    <th>Deskripsi</th>
+                    <th>Stok</th>
+                    <th>Harga</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Tiger Nixon</td>
-                    <td>System Architect</td>
-                    <td>Edinburgh</td>
-                    <td>61</td>
-                    <td>2011/04/25</td>
-                    <td>$320,800</td>
-                </tr>
-                <tr>
-                    <td>Garrett Winters</td>
-                    <td>Accountant</td>
-                    <td>Tokyo</td>
-                    <td>63</td>
-                    <td>2011/07/25</td>
-                    <td>$170,750</td>
-                </tr>
+              <?php
+                include "koneksi.php";
+                $query = "select kodeobat, namaobat,deskripsi,stok,hargajual from obat";
+                $result = mysqli_query($conn,$query);
+                while($data = mysqli_fetch_array($result)){
+                echo "<tr>
+                    <td>$data[0]</td>
+                    <td>$data[1]</td>
+                    <td>$data[2]</td>
+                    <td>$data[3]</td>
+                    <td>$data[4]</td>
+                </tr>";
+              }
+              mysqli_close($conn);
+                ?>
             </tbody>
            
         </table>
@@ -143,7 +145,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
       </article>
       </main>
       <footer>
-        <p>Hiyahiya &#169; 2020</p>
+        <p><i class="fa fa-copyright" aria-hidden="true">Created By Sandi & Rivaldo &#169; 2020</i> </p>
       </footer>
       <div id="onphpidLogin" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
@@ -161,11 +163,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
               <form method="POST" action="">
                 <div class="form-group">
                   <label for="username">Username</label>
-                  <input type="text" name="username" placeholder="Username" class="form-control" />
+                  <input type="text" name="username" class="form-control" />
                 </div>
                 <div class="form-group">
                   <label for="password">Password</label>
-                  <input type="password" name="password" placeholder="Password" class="form-control" />
+                  <input type="password" name="password" class="form-control" />
                 </div>
                 <div class="text-right">
                   <button class="btn btn-danger" type="submit">Login</button>
