@@ -6,7 +6,7 @@ if (!isset($_SESSION)){
 $user1 = new User();
 if (isset($_GET['logoutt'])) {
  $user1->logout();
- header("location:beranda2.php");
+ header("location:index.php");
 }
 if (isset($_GET['input'])) {
   if ($_GET['input']=='sukses') {
@@ -44,13 +44,13 @@ if (isset($_GET['delete'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($_POST['logout']== "Ya") {
       $user1->logout();
-      header("location:beranda2.php");
+      header("location:index.php");
     }
 }
 
 function logoutuser() {
   $this->user1->logout();
-  header("location:beranda2.php");
+  header("location:index.php");
 }
 
 
