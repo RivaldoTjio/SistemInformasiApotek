@@ -41,6 +41,18 @@ if (isset($_GET['delete'])) {
 }
 
 }
+if (isset($_GET['create'])) {
+  if ($_GET['create']=='sukses') {
+    alert("Buat User Sukses");
+  unset($_GET['create']);
+  } elseif (isset($_GET['create'])=='gagal') {
+  alert("Buat User Gagal");
+  unset($_GET['create']);
+} else{
+  alert($_GET['create']);
+}
+
+}
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($_POST['logout']== "Ya") {
       $user1->logout();
@@ -84,6 +96,7 @@ function alert($msg) {
             <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="Input">Input data</a>
             <a class="list-group-item list-group-item-action" id="list-lapor-list" data-toggle="list" href="#list-edit" role="tab" aria-controls="Input">Edit Data</a>
             <a class="list-group-item list-group-item-action" id="list-delete-list" data-toggle="list" href="#list-delete" role="tab" aria-controls="Input">Delete Data</a>
+            <a class="list-group-item list-group-item-action" id="list-create-list" data-toggle="list" href="#create-user" role="tab" aria-controls="Input">Buat User</a>
             <a class="list-group-item list-group-item-action" id="list-messages-list" value="logoutt" data-toggle="modal" href="#modalkeluar" role="tab" aria-controls="Keluar">Keluar</a>
           </div>
           </div>
@@ -168,6 +181,49 @@ function alert($msg) {
                     
                   </form>
               </div>
+              <div class="tab-pane fade" id="create-user" role="tabpanel" aria-labelledby="list-delete-list">
+                <form method="post" action="createuser.php">
+                <div class="form-group" >
+                        <h2>Buat User Baru</h2>
+                    </div> 
+                    <div class="form-group">
+                        <label for="username" style="text-align: center;">Username</label>
+                        <input type="text" name="username" class="form-control" />
+                      </div> 
+                      <div class="form-group">
+                        <label for="password" style="text-align: center;">Password</label>
+                        <input type="password" name="password" class="form-control" />
+                      </div>
+                      <div class="form-group">
+                      <div class="text-center" style="padding-bottom: 10px;">
+                      <button class="btn btn-success btn-block" type="submit">Buat User</button>
+                    </div>
+                      </div>
+                </form>
+                <div class="form-group">
+                <table id="example" class="display" style="width:100%">
+            <thead style="background-color: black;color: white;">
+                <tr>
+                    <th>Username</th>
+                  
+                </tr>
+            </thead>
+            <tbody>
+              <?php
+                include "koneksi.php";
+                $query = "select username from users";
+                $result = mysqli_query($conn,$query);
+                while($data = mysqli_fetch_array($result)){
+                echo "<tr>
+                    <td>$data[0]</td>
+                </tr>";
+              }
+                ?>
+            </tbody>
+        </table> 
+        </div>
+
+              </div>
             
             <div class="tab-pane fade" id="list-delete" role="tabpanel" aria-labelledby="list-delete-list">
                 <form method="post" action="delete.php">
@@ -195,21 +251,23 @@ function alert($msg) {
                     </div>
                     </div>
                 </form>
-                
-          <table id="example" class="display" style="width:100%">
+                <div class="form-group">   
+          <table id="dataobat" class="display" style="width:100%">
             <thead style="background-color: black;color: white;">
                 <tr>
                     <th>Kode Obat</th>
                     <th>Nama Obat</th> 
                     <th>Deskripsi</th>
                     <th>Stok</th>
-                    <th>Harga</th>
+                    <th>Harga Beli</th>
+                    <th>Harga Jual</th>
+                    <th>Di Edit Oleh</th>
                 </tr>
             </thead>
             <tbody>
               <?php
                 include "koneksi.php";
-                $query = "select kodeobat, namaobat,deskripsi,stok,hargajual from obat";
+                $query = "select kodeobat, namaobat,deskripsi,stok,hargabeli,hargajual,username from obat";
                 $result = mysqli_query($conn,$query);
                 while($data = mysqli_fetch_array($result)){
                 echo "<tr>
@@ -218,12 +276,15 @@ function alert($msg) {
                     <td>$data[2]</td>
                     <td>$data[3]</td>
                     <td>$data[4]</td>
+                    <td>$data[5]</td>
+                    <td>$data[6]</td>
                 </tr>";
               }
                 ?>
             </tbody>
            
         </table> 
+                </div>
       </div>
       </div>
         </div>
@@ -262,7 +323,10 @@ function alert($msg) {
     <script>
       $(document).ready(function() {
     var table = $('#example').DataTable();
-     
+    $('#dataobat').DataTable({
+    pageLength: 10,
+    filter: true,
+});
     $('#example tbody')
         .on( 'mouseenter', 'td', function () {
             var colIdx = table.cell(this).index().column;
